@@ -32,6 +32,6 @@ jobs:
   - template: V2/main.yml@templates
     # Template parameters
     parameters:
-      publishDocs: true
+      publishDocs: false
       language: GO
       buildType: LIBRARY

@@ -3,7 +3,7 @@ package pears_test
 import (
 	"errors"
 	"fmt"
-	pears "github.com/peake100/pears-go/pkg"
+	"github.com/peake100/pears-go/pkg/pears"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net"
