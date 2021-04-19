@@ -1,46 +1,20 @@
-<h1 align="center">Pears</h1>
-<p align="center">Harvest Go Errors with Ease</p>
-<p align="center">
-    <a href="https://dev.azure.com/[Organization]/[Project]/_build?definitionId=[DefID]"><img src="https://dev.azure.com/[Organization]/[Project]/_apis/build/status/[PipelineName]?repoName=[repoName]&branchName=dev" alt="click to see build pipeline"></a>
-    <a href="https://dev.azure.com/[Organization]/[Project]/_build?definitionId=[DefID]"><img src="https://img.shields.io/azure-devops/tests/[Organization]/[Project]/[DefID]/dev?compact_message" alt="click to see build pipeline"></a>
-    <a href="https://dev.azure.com/[Organization]/[Project]/_build?definitionId=[DefID]"><img src="https://img.shields.io/azure-devops/coverage/[Organization]/[Project]/[DefID]/dev?compact_message" alt="click to see build pipeline"></a>
-</p>
-<p align="center">
-    <a href="https://goreportcard.com/report/github.com/illuscio-dev/islelib-go"><img src="https://goreportcard.com/badge/github.com/illuscio-dev/islelib-go" alt="click to see report card"></a>
-    <a href="https://codeclimate.com/github/[org]/[project]/maintainability"><img src="https://api.codeclimate.com/v1/badges/[ProjectID]/maintainability" alt="click to see report"></a>
-</p>
-<p align="center">
-    <a href="https://github.com/illuscio-dev/islelib-go"><img src="https://img.shields.io/github/go-mod/go-version/illuscio-dev/islelib-go" alt="Repo"></a>
-    <a href="https://illuscio-dev.github.io/islelib-go/"><img src="https://img.shields.io/badge/docs-github.io-blue" alt="Documentation"></a>
-    <a href="https://pkg.go.dev/github.com/illuscio-dev/islelib-go?readme=expanded#section-documentation"><img src="https://pkg.go.dev/badge/github.com/illuscio-dev/islelib-go?readme=expanded#section-documentation.svg" alt="Go Reference"></a>
-</p>
-
-Introduction
-------------
-
-Pears helps reduce the boilerplate and ensure correctness for common error-handling 
-scenarios:
-
-- Panic recovery
-
-- Abort and error collection from concurrent workers.
-
-Demo
-----
-
-**Catch a Panic**
-
-```go
-package main
+package pears_test
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/peake100/pears-go/pkg/pears"
 	"io"
+	"math/rand"
+	"time"
 )
 
-func main() {
+// randNum will be used to do an operation successfully.
+var randNum = rand.NewSource(0)
+
+// Catch a panic and return a PanicError from an error value.
+func ExampleCatchPanic_panicFromError() {
 	// We can use CatchPanic to catch ay panics that occur in an operation
 	err := pears.CatchPanic(func() (innerErr error) {
 		// We are going to throw an io.EOF.
@@ -68,24 +42,59 @@ func main() {
 	// error is recovered panic
 	// error is io.EOF
 }
-```
 
-**Gather Errors From Multiple Workers**
+// Catch a panic and return a PanicError from a non-error value.
+func ExampleCatchPanic_panicFromInt() {
+	// We can use CatchPanic to catch ay panics that occur in an operation, even if
+	// the panic value is not an error.
+	err := pears.CatchPanic(func() (innerErr error) {
+		// We are going to throw an io.EOF.
+		panic(2)
+	})
 
-```go
-package main
+	fmt.Println("Error:", err)
 
-import (
-	"context"
-	"errors"
-	"fmt"
-	"github.com/peake100/pears-go/pkg/pears"
-	"io"
-	"time"
-)
+	// Output:
+	// Error: panic recovered: 2
+}
+
+// Error passthrough.
+func ExampleCatchPanic_errorReturn() {
+
+	// We can use CatchPanic to catch ay panics that occur in an operation
+	err := pears.CatchPanic(func() (innerErr error) {
+		// We are going to return a normal error.
+		return io.EOF
+	})
+
+	// We do not get a PanicError this time.
+	fmt.Println("Error:", err)
+
+	// Output:
+	// Error: EOF
+}
+
+// A successful operation wrapped in CatchPanic.
+func ExampleCatchPanic_success() {
+	// We can use CatchPanic to catch ay panics that occur in an operation
+	var result int64
+	err := pears.CatchPanic(func() (innerErr error) {
+		// We are going to return a normal error.
+		result = randNum.Int63()
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("RESULT:", result)
+
+	// Output:
+	// RESULT: 8717895732742165505
+}
 
 // Have the first error cause all other operations to abort.
-func main() {
+func ExampleNewRoutineManager_abortOnError() {
 	manager := pears.NewRoutineManager(
 		context.Background(), // this context will be used as the parent to all
 		// operation contexts
@@ -200,40 +209,3 @@ func main() {
 	// error during worker5: context canceled
 	// error during worker2: context canceled
 }
-```
-
-Goals
------
-
-- Expose simple APIs for dealing with common error-handling situations.
-
-- Support error inspection through errors.Is and errors.As,
-
-Non-Goals
----------
-
-- Creating complex error frameworks. Pears does not want to re-invent the wheel and 
-  seeks only to reduce the boilerplate of leveraging Go's built-in error system.
-  
-- Solving niche problems. This package seeks to help only the most-broad error cases.
-  Features like HTTP or gRPC error-code and serialization systems are beyond the scope 
-  of this package.
-
-## Getting Started
-For API documentation:
-[read the docs](https://illuscio-dev.github.io/islelib-go/).
-
-For library development guide, 
-[read the docs](https://illuscio-dev.github.io/islelib-go/).
-
-### Prerequisites
-
-Golang 1.6+, Python 3.6+
-
-## Authors
-
-* **Billy Peake** - *Initial work*
-
-## Attributions
-
-<div>Logo made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
