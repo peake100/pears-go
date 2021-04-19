@@ -41,24 +41,24 @@ func TestCatchPanic_Panic_ErrValue(t *testing.T) {
 
 	assert.Error(err, "error returned")
 
-	var panicErr pears.PanicErr
+	var panicErr pears.PanicError
 	if !assert.ErrorAs(err, &panicErr, "error is panic error") {
 		t.FailNow()
 	}
 	assert.ErrorIs(err, io.EOF, "error is io.EOF")
 	assert.EqualError(err, "panic recovered: EOF")
 
-	if !assert.NotNil(panicErr.Recovered, "PanicErr.Recovered not nil") {
+	if !assert.NotNil(panicErr.Recovered, "PanicError.Recovered not nil") {
 		t.FailNow()
 	}
-	if !assert.NotNil(panicErr.RecoveredErr, "PanicErr.RecoveredErr not nil") {
+	if !assert.NotNil(panicErr.RecoveredErr, "PanicError.RecoveredErr not nil") {
 		t.FailNow()
 	}
-	assert.ErrorIs(panicErr.RecoveredErr, io.EOF, "PanicErr.RecoveredErr is io.EOF")
+	assert.ErrorIs(panicErr.RecoveredErr, io.EOF, "PanicError.RecoveredErr is io.EOF")
 	assert.IsType(
 		panicErr.Recovered,
 		errors.New("some error"),
-		"PanicErr.Recovered is error string type",
+		"PanicError.Recovered is error string type",
 	)
 	assert.NotZero(panicErr.StackTrace, "stack trace not empty")
 	t.Log("STACKTRACE:\n", panicErr.StackTrace)
@@ -73,27 +73,27 @@ func TestCatchPanic_Panic_IntValue(t *testing.T) {
 
 	assert.Error(err, "error returned")
 
-	var panicErr pears.PanicErr
+	var panicErr pears.PanicError
 	if !assert.ErrorAs(err, &panicErr, "error is panic error") {
 		t.FailNow()
 	}
 	assert.EqualError(err, "panic recovered: 2")
 
-	if !assert.NotNil(panicErr.Recovered, "PanicErr.Recovered not nil") {
+	if !assert.NotNil(panicErr.Recovered, "PanicError.Recovered not nil") {
 		t.FailNow()
 	}
-	if !assert.NotNil(panicErr.RecoveredErr, "PanicErr.RecoveredErr is nil") {
+	if !assert.NotNil(panicErr.RecoveredErr, "PanicError.RecoveredErr is nil") {
 		t.FailNow()
 	}
 	assert.IsType(
 		panicErr.Recovered,
 		1,
-		"PanicErr.Recovered is error int type",
+		"PanicError.Recovered is error int type",
 	)
 	assert.IsType(
 		panicErr.RecoveredErr,
 		errors.New("mock"),
-		"PanicErr.Recovered is error int type",
+		"PanicError.Recovered is error int type",
 	)
 	t.Log("STACKTRACE:\n", panicErr.StackTrace)
 }

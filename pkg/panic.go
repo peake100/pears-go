@@ -5,8 +5,8 @@ import (
 	"runtime/debug"
 )
 
-// PanicErr is returned by CatchPanic when a panic was recovered.
-type PanicErr struct {
+// PanicError is returned by CatchPanic when a panic was recovered.
+type PanicError struct {
 	// Recovered contains the original value recovered from recovered().
 	Recovered interface{}
 	// RecoveredErr is Recovered converted to an error, through a type assertion if
@@ -17,18 +17,18 @@ type PanicErr struct {
 }
 
 // Error implements builtins.error.
-func (err PanicErr) Error() string {
+func (err PanicError) Error() string {
 	return fmt.Sprint("panic recovered: ", err.RecoveredErr)
 }
 
 // Unwrap implements xerrors.Wrapper for unwraps to RecoveredErr.
-func (err PanicErr) Unwrap() error {
+func (err PanicError) Unwrap() error {
 	return err.RecoveredErr
 }
 
 // CatchPanic runs mayPanic and returns it's result.
 //
-// If mayPanic panics, the panic is recovered and a PanicErr is returned with the
+// If mayPanic panics, the panic is recovered and a PanicError is returned with the
 // recovered value.
 func CatchPanic(mayPanic func() (innerErr error)) (err error) {
 	// Defer catching a panic.
@@ -50,8 +50,8 @@ func CatchPanic(mayPanic func() (innerErr error)) (err error) {
 			recoveredErr = fmt.Errorf("%v", recovered)
 		}
 
-		// Set the return error to a PanicErr.
-		err = PanicErr{
+		// Set the return error to a PanicError.
+		err = PanicError{
 			Recovered:    recovered,
 			RecoveredErr: recoveredErr,
 			StackTrace:   string(stacktrace),
