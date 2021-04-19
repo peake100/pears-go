@@ -1,14 +1,19 @@
 package pears
 
-import "fmt"
+import (
+	"fmt"
+	"runtime/debug"
+)
 
-// PanicErr
+// PanicErr is returned by CatchPanic when a panic was recovered.
 type PanicErr struct {
 	// Recovered contains the original value recovered from recovered().
 	Recovered interface{}
 	// RecoveredErr is Recovered converted to an error, through a type assertion if
 	// Recovered implements error, or fmt.Errorf("%v", Recovered) if it does not.
 	RecoveredErr error
+	// StackTrace contains the formatted stacktrace of the panic.
+	StackTrace string
 }
 
 // Error implements builtins.error.
@@ -28,11 +33,14 @@ func (err PanicErr) Unwrap() error {
 func CatchPanic(mayPanic func() (innerErr error)) (err error) {
 	// Defer catching a panic.
 	defer func() {
-		recovered := recover()
+		var stacktrace []byte
+		var recovered interface{}
 		// If there is nothing to recover, return.
-		if recovered == nil {
+		if recovered = recover(); recovered == nil {
 			return
 		}
+
+		stacktrace = debug.Stack()
 
 		// Check if the recovered value is an error.
 		var recoveredErr error
@@ -46,6 +54,7 @@ func CatchPanic(mayPanic func() (innerErr error)) (err error) {
 		err = PanicErr{
 			Recovered:    recovered,
 			RecoveredErr: recoveredErr,
+			StackTrace:   string(stacktrace),
 		}
 	}()
 

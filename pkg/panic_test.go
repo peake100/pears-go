@@ -60,6 +60,8 @@ func TestCatchPanic_Panic_ErrValue(t *testing.T) {
 		errors.New("some error"),
 		"PanicErr.Recovered is error string type",
 	)
+	assert.NotZero(panicErr.StackTrace, "stack trace not empty")
+	t.Log("STACKTRACE:\n", panicErr.StackTrace)
 }
 
 func TestCatchPanic_Panic_IntValue(t *testing.T) {
@@ -93,4 +95,5 @@ func TestCatchPanic_Panic_IntValue(t *testing.T) {
 		errors.New("mock"),
 		"PanicErr.Recovered is error int type",
 	)
+	t.Log("STACKTRACE:\n", panicErr.StackTrace)
 }
