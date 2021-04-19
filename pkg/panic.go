@@ -30,6 +30,12 @@ func (err PanicError) Unwrap() error {
 //
 // If mayPanic panics, the panic is recovered and a PanicError is returned with the
 // recovered value.
+//
+// It is not generally a good pattern to use panic recovery as a throw/catch mechanism
+// like other languages support. This function should be used sparingly in contexts
+// where panics need to be caught and returned. A good example would be an HTTP server
+// framework catching panics from an endpoint handler so an error status can be returned
+// to the original requester.
 func CatchPanic(mayPanic func() (innerErr error)) (err error) {
 	// Defer catching a panic.
 	defer func() {
