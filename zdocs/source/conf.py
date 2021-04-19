@@ -109,7 +109,7 @@ html_static_path = ["_static"]
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "spantoolsdoc"
+htmlhelp_basename = "pearsdoc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -133,7 +133,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, "spantools.text", "spantools Documentation", "Billy Peake", "manual")
+    (master_doc, "pears.text", "pears Documentation", "Billy Peake", "manual")
 ]
 
 
@@ -141,7 +141,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "spantools", "spantools Documentation", 1)]
+man_pages = [(master_doc, "pears", "pears Documentation", 1)]
 
 
 # -- Options for Texinfo output ----------------------------------------------
@@ -152,9 +152,9 @@ man_pages = [(master_doc, "spantools", "spantools Documentation", 1)]
 texinfo_documents = [
     (
         master_doc,
-        "spantools",
-        "spantools Documentation",
-        "spantools",
+        "pears",
+        "pears Documentation",
+        "pears",
         "One line description of project.",
         "Miscellaneous",
     )

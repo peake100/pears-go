@@ -1,5 +1,5 @@
-<h1 align="center">Islelib</h1>
-<p align="center">A Go library template</p>
+<h1 align="center">Pears</h1>
+<p align="center">Harvest Go Errors with Ease</p>
 <p align="center">
     <a href="https://dev.azure.com/[Organization]/[Project]/_build?definitionId=[DefID]"><img src="https://dev.azure.com/[Organization]/[Project]/_apis/build/status/[PipelineName]?repoName=[repoName]&branchName=dev" alt="click to see build pipeline"></a>
     <a href="https://dev.azure.com/[Organization]/[Project]/_build?definitionId=[DefID]"><img src="https://img.shields.io/azure-devops/tests/[Organization]/[Project]/[DefID]/dev?compact_message" alt="click to see build pipeline"></a>
