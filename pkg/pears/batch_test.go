@@ -364,7 +364,7 @@ func TestBatchErrors_Error(t *testing.T) {
 					io.EOF,
 				},
 			},
-			ExpectedMessage: "3 errors returned, including: unexpected EOF",
+			ExpectedMessage: "3 errors returned. first: unexpected EOF",
 		},
 		{
 			Name: "BatchMatchAny",
@@ -376,7 +376,7 @@ func TestBatchErrors_Error(t *testing.T) {
 					io.EOF,
 				},
 			},
-			ExpectedMessage: "3 errors returned, including: unexpected EOF",
+			ExpectedMessage: "3 errors returned. first: unexpected EOF",
 		},
 		{
 			Name: "BatchMatchAny",
@@ -388,7 +388,7 @@ func TestBatchErrors_Error(t *testing.T) {
 					io.EOF,
 				},
 			},
-			ExpectedMessage: "3 errors returned, including: unexpected EOF",
+			ExpectedMessage: "3 errors returned. first: unexpected EOF",
 		},
 	}
 
@@ -413,7 +413,7 @@ func TestBatchError(t *testing.T) {
 	}
 
 	t.Run("Error", func(t *testing.T) {
-		assert.EqualError(t, err, "error during read file: EOF")
+		assert.EqualError(t, err, "error during 'read file': EOF")
 	})
 
 	t.Run("Unwrap", func(t *testing.T) {

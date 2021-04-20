@@ -107,10 +107,9 @@ func ExampleNewRoutineManager_abortOnError() {
 	)
 
 	for i := 0; i < 10; i++ {
-		// Each routine will be identified as 'worker [i]'. We do not need tpo use the
-		// 'go' keyword here. Internally, op will be launched as a routine, but
-		// LaunchRoutine has to add to an internal WaitGroup before the op can be
-		// launched.
+		// Each routine will be identified as 'worker [workerNum]'. We do not need to
+		// use the 'go' keyword here. op will be launched as a routine, but some internal
+		// internal bookkeeping needs to occur before the op can be launched.
 		workerNum := i
 		manager.LaunchRoutine(fmt.Sprint("worker", workerNum), func(ctx context.Context) error {
 			// We'll use a timer to stand in for some long-running worker.
@@ -126,38 +125,40 @@ func ExampleNewRoutineManager_abortOnError() {
 		})
 	}
 
-	// Lastly we'll launch a routine that returns an error. This will cause the ctx of
-	// all thee routines launched above to cancel and those routines to abort.
+	// Lastly we'll launch a routine that returns an error, which will cancel the
+	// contexts of every op launched above.
 	manager.LaunchRoutine("faulty operation", func(ctx context.Context) error {
 		// This faulty operation will return an io.EOF
 		return io.EOF
 	})
 
 	// Now we join the manager, which blocks until all routines launched above return.
-	// We will get back an error if any operations returned an error.
+	// If any operations returned an error, we will get one here.
 	err := manager.Join()
 
 	// report our error.
 	fmt.Println("\nERROR:", err)
 
-	// We can use errors.Is() and errors.As() to inspect what caused our operations
-	// to fail. Because pears.BatchMatchFirst was used as our error-matching mode,
-	// only the FIRST encountered error will pass errors.Is() or errors.As().
+	// errors.Is() and errors.As() can inspect what caused our operations to fail.
+	// Because pears.BatchMatchFirst is our error-matching mode, only the FIRST
+	// encountered error will pass errors.Is() or errors.As().
 	//
 	// For us that should be io.EOF.
 	if errors.Is(err, io.EOF) {
 		fmt.Println("error is io.EOF")
 	}
 
-	// Even though the other operations returned a context.Canceled, we will NOT
-	// pass the following check since it was not the FIRST error returned. This makes
-	// some sense since these cancellation errors did not really cause the error, they
-	// resulted from it.
+	// Even though the other operations returned context.Canceled, we will NOT
+	// pass the following check since it was not the FIRST error returned. This is nice
+	// for checking against an error that started a cascade.
+	//
+	// If our match mode had been set to pears.BatchMatchAny, this check would also
+	// pass
 	if errors.Is(err, context.Canceled) {
 		fmt.Println("error is context.Cancelled")
 	}
 
-	// We can extract an OpError to get more information about the first error.
+	// We can extract a pears.OpError to get more information about the first error.
 	opErr := pears.OpError{}
 	if !errors.As(err, &opErr) {
 		panic("expected opErr")
@@ -192,20 +193,20 @@ func ExampleNewRoutineManager_abortOnError() {
 	// operation 5 received abort request
 	// operation 2 received abort request
 	//
-	// ERROR: 11 errors returned, including: error during faulty operation: EOF
+	// ERROR: 11 errors returned. first: error during 'faulty operation': EOF
 	// error is io.EOF
 	// batch failure caused by operation: faulty operation
 	//
 	// ALL ERRORS:
-	// error during faulty operation: EOF
-	// error during worker9: context canceled
-	// error during worker8: context canceled
-	// error during worker1: context canceled
-	// error during worker3: context canceled
-	// error during worker6: context canceled
-	// error during worker4: context canceled
-	// error during worker0: context canceled
-	// error during worker7: context canceled
-	// error during worker5: context canceled
-	// error during worker2: context canceled
+	// error during 'faulty operation': EOF
+	// error during 'worker1': context canceled
+	// error during 'worker5': context canceled
+	// error during 'worker7': context canceled
+	// error during 'worker0': context canceled
+	// error during 'worker4': context canceled
+	// error during 'worker6': context canceled
+	// error during 'worker8': context canceled
+	// error during 'worker3': context canceled
+	// error during 'worker2': context canceled
+	// error during 'worker9': context canceled
 }

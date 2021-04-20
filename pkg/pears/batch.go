@@ -32,7 +32,7 @@ type OpError struct {
 // Error implements builtins.error.
 func (err OpError) Error() string {
 	return fmt.Sprintf(
-		"error during %v: %v", err.OpName, err.Err,
+		"error during '%v': %v", err.OpName, err.Err,
 	)
 }
 
@@ -62,7 +62,7 @@ type BatchErrors struct {
 // Error implements builtins.error.
 func (err BatchErrors) Error() string {
 	return fmt.Sprintf(
-		"%v errors returned, including: %v", len(err.Errs), err.Errs[0],
+		"%v errors returned. first: %v", len(err.Errs), err.Errs[0],
 	)
 }
 
