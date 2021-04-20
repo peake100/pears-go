@@ -27,7 +27,7 @@ variables:
   # Link to the variables template.
   - template: V2/variables.yml@templates
 
-jobs:
+extends:
   # Link to the pipeline template.
   - template: V2/main.yml@templates
     # Template parameters
