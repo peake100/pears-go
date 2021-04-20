@@ -223,7 +223,7 @@ Non-Goals
 
 ## Getting Started
 For API documentation:
-[read the docs](https://illuscio-dev.github.io/islelib-go/).
+[read the docs](https://pkg.go.dev/github.com/peake100/pears-go?readme=expanded#section-documentation).
 
 For library development guide, 
 [read the docs](https://illuscio-dev.github.io/islelib-go/).
