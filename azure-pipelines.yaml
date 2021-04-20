@@ -29,9 +29,9 @@ variables:
 
 extends:
   # Link to the pipeline template.
-  - template: V2/main.yml@templates
-    # Template parameters
-    parameters:
-      publishDocs: false
-      language: GO
-      buildType: LIBRARY
+  template: V2/main.yml@templates
+  # Template parameters
+  parameters:
+    publishDocs: false
+    language: GO
+    buildType: LIBRARY
