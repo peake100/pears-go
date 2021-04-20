@@ -1,0 +1,3 @@
+packaging==20.9
+-e git+https://github.com/peake100/pears-go@79dc92c857b199d7de48ff70da3b5065b1985c75#egg=pears
+pyparsing==2.4.7
