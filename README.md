@@ -1,18 +1,20 @@
 <h1 align="center">Pears</h1>
+<p align="center">
+    <img height=200 align="center" src="https://raw.githubusercontent.com/peake100/pears-go/main/zdocs/source/_static/logo.svg"/>
+</p>
 <p align="center">Harvest Go Errors with Ease</p>
 <p align="center">
-    <a href="https://dev.azure.com/[Organization]/[Project]/_build?definitionId=[DefID]"><img src="https://dev.azure.com/[Organization]/[Project]/_apis/build/status/[PipelineName]?repoName=[repoName]&branchName=dev" alt="click to see build pipeline"></a>
-    <a href="https://dev.azure.com/[Organization]/[Project]/_build?definitionId=[DefID]"><img src="https://img.shields.io/azure-devops/tests/[Organization]/[Project]/[DefID]/dev?compact_message" alt="click to see build pipeline"></a>
-    <a href="https://dev.azure.com/[Organization]/[Project]/_build?definitionId=[DefID]"><img src="https://img.shields.io/azure-devops/coverage/[Organization]/[Project]/[DefID]/dev?compact_message" alt="click to see build pipeline"></a>
+    <a href="https://dev.azure.com/peake100/Peake100/_build?definitionId=10"><img src="https://dev.azure.com/peake100/Peake100/_apis/build/status/pears-go?repoName=peake100%2Fpears-go&branchName=dev" alt="click to see build pipeline"></a>
+    <a href="https://dev.azure.com/peake100/Peake100/_build?definitionId=10"><img src="https://img.shields.io/azure-devops/tests/peake100/Peake100/10/dev?compact_message" alt="click to see build pipeline"></a>
+    <a href="https://dev.azure.com/peake100/Peake100/_build?definitionId=10"><img src="https://img.shields.io/azure-devops/coverage/peake100/Peake100/10/dev?compact_message" alt="click to see build pipeline"></a>
 </p>
 <p align="center">
     <a href="https://goreportcard.com/report/github.com/illuscio-dev/islelib-go"><img src="https://goreportcard.com/badge/github.com/illuscio-dev/islelib-go" alt="click to see report card"></a>
-    <a href="https://codeclimate.com/github/[org]/[project]/maintainability"><img src="https://api.codeclimate.com/v1/badges/[ProjectID]/maintainability" alt="click to see report"></a>
+    <a href="https://codeclimate.com/github/peake100/pears-go/maintainability"><img src="https://api.codeclimate.com/v1/badges/eb73ef0f82b6bd72d7a2/maintainability" /></a>
 </p>
 <p align="center">
-    <a href="https://github.com/illuscio-dev/islelib-go"><img src="https://img.shields.io/github/go-mod/go-version/illuscio-dev/islelib-go" alt="Repo"></a>
-    <a href="https://illuscio-dev.github.io/islelib-go/"><img src="https://img.shields.io/badge/docs-github.io-blue" alt="Documentation"></a>
-    <a href="https://pkg.go.dev/github.com/illuscio-dev/islelib-go?readme=expanded#section-documentation"><img src="https://pkg.go.dev/badge/github.com/illuscio-dev/islelib-go?readme=expanded#section-documentation.svg" alt="Go Reference"></a>
+    <a href="https://github.com/peake100/pears-go"><img src="https://img.shields.io/github/go-mod/go-version/peake100/pears-go" alt="Repo"></a>
+    <a href="https://pkg.go.dev/github.com/peake100/pears-go?readme=expanded#section-documentation"><img src="https://pkg.go.dev/badge/github.com/peake100/pears-go?readme=expanded#section-documentation.svg" alt="Go Reference"></a>
 </p>
 
 Introduction

@@ -59,17 +59,17 @@ install-dev:
 .PHONY: install-tools
 install-tools:
 	# Creates html report of tests.
-	-go install github.com/ains/go-test-html
+	-go install github.com/ains/go-test-html@latest
 	# Creates API doc server.
-	-go install golang.org/x/tools/cmd/godoc
+	-go install golang.org/x/tools/cmd/godoc@latest
 	# Downloads module APIs from API server.
-	-go install github.com/illuscio-dev/docmodule-go
+	-go install github.com/illuscio-dev/docmodule-go@latest
 	# Linter
-	-go install github.com/mgechev/revive
+	-go install github.com/mgechev/revive@latest
 	# Converts to junit for making html reports
-	-go install github.com/jstemmer/go-junit-report
+	-go install github.com/jstemmer/go-junit-report@latest
 	# Catches misspelling
-	-go install github.com/client9/misspell/cmd/misspell
+	-go install github.com/client9/misspell/cmd/misspell@latest
 	# Converts junit reports into pretty html
 	-npm i -g xunit-viewer
 
