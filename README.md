@@ -74,9 +74,21 @@ func main() {
 
 **Gather Errors From Multiple Workers**
 
-pears offers a ``RoutineManager`` type similar to [errgroup.Group](https://pkg.go.dev/golang.org/x/sync/errgroup#section-documentation),
-with one main difference: errors are collected into a pears.BatchError type which allows
-for the collection of many errors from worker routines, not just the first worker.
+pears offers a ``Group`` type which takes some inspirations from 
+[https://pkg.go.dev/golang.org/x/sync/errgroup](errgroup.Group), with some key 
+differences:
+
+- All errors are collected, not just the first. Each is wrapped in an OpError and 
+  then collected into a GroupErrors. These types offer a number of ways to inspect
+  and resolve errors in concurrent situations.
+
+- Launched operations can be named using GoNamed for more robust error inspection and
+  handling.
+
+- A context is required, and is passed to all child functions, allowing for higher
+  readability of where a context comes from.
+
+- Group must be created with a constructor function: NewGroup.
 
 ```go
 package main
@@ -91,15 +103,9 @@ import (
 )
 
 func main() {
-	manager := pears.NewRoutineManager(
-		context.Background(), // this context will be used as the parent to all
+	group := pears.NewGroup(
+		context.Background(), // this context will be used as the parent to al
 		// operation contexts
-
-		true, //abortOnError - this will cause any operation
-		// error to cancel all other operations.
-
-		pears.BatchMatchFirst, // the returned BatchErrors will unwrap to the first
-		// error returned fom an operation.
 	)
 
 	for i := 0; i < 10; i++ {
@@ -107,30 +113,30 @@ func main() {
 		// use the 'go' keyword here. op will be launched as a routine, but some
 		// internal bookkeeping needs to occur before the op can be launched.
 		workerNum := i
-		manager.LaunchRoutine(fmt.Sprint("worker", workerNum), func(ctx context.Context) error {
+		group.GoNamed(fmt.Sprint("worker", workerNum), func(ctx context.Context) error {
 			// We'll use a timer to stand in for some long-running worker.
 			timer := time.NewTimer(5 * time.Second)
 			select {
 			case <-ctx.Done():
 				fmt.Printf("operation %v received abort request\n", workerNum)
-				return ctx.Err()
+			return ctx.Err()
 			case <-timer.C:
 				fmt.Printf("operation %v completed successfully\n", workerNum)
-				return nil
+        	return nil
 			}
 		})
 	}
 
 	// Lastly we'll launch a routine that returns an error, which will cancel the
 	// contexts of every op launched above.
-	manager.LaunchRoutine("faulty operation", func(ctx context.Context) error {
+	group.GoNamed("faulty operation", func(ctx context.Context) error {
 		// This faulty operation will return an io.EOF
 		return io.EOF
 	})
 
-	// Now we join the manager, which blocks until all routines launched above return.
+	// Now we join the group, which blocks until all routines launched above return.
 	// If any operations returned an error, we will get one here.
-	err := manager.Join()
+	err := group.Wait()
 
 	// report our error.
 	fmt.Println("\nERROR:", err)
@@ -157,25 +163,25 @@ func main() {
 	// We can extract a pears.OpError to get more information about the first error.
 	opErr := pears.OpError{}
 	if !errors.As(err, &opErr) {
-		panic("expected opErr")
-	}
+    panic("expected opErr")
+  }
 
 	fmt.Println("batch failure caused by operation:", opErr.OpName)
 
-	// We can also extract a BatchErrors to inspect all of our errors more closely:
-	batchErr := pears.BatchErrors{}
-	if !errors.As(err, &batchErr) {
-		panic("expected BatchErrors")
-	}
+	// We can also extract a GroupErrors to inspect all of our errors more closely:
+	groupErrs := pears.GroupErrors{}
+	if !errors.As(err, &groupErrs) {
+    panic("expected BatchErrors")
+  }
 
 	// Let's inspect ALL of the errors we got back. We'll see that the context
 	// cancellation errors were returned, but because of our Batch error matching mode,
 	// are being kept from surfacing through errors.Is() and errors.As().
 	fmt.Println("\nALL ERRORS:")
-	for _, thisErr := range batchErr.Errs {
+	for _, thisErr := range groupErrs.Errs {
 		fmt.Println(thisErr)
 	}
-
+  
 	// Unordered Output:
 	//
 	// operation 9 received abort request
