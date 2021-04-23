@@ -94,24 +94,16 @@ func ExampleCatchPanic_success() {
 }
 
 // Have the first error cause all other operations to abort.
-func ExampleNewRoutineManager_abortOnError() {
-	manager := pears.NewRoutineManager(
-		context.Background(), // this context will be used as the parent to all
-		// operation contexts
-
-		true, //abortOnError - this will cause any operation
-		// error to cancel all other operations
-
-		pears.BatchMatchFirst, // the returned BatchErrors will unwrap to the first
-		// error returned fom an operation
-	)
+func ExampleNewGroup_abortOnError() {
+	// The context will be used as a parent context to all of our child operations.
+	manager := pears.NewGroup(context.Background())
 
 	for i := 0; i < 10; i++ {
 		// Each routine will be identified as 'worker [workerNum]'. We do not need to
 		// use the 'go' keyword here. op will be launched as a routine, but some internal
 		// internal bookkeeping needs to occur before the op can be launched.
 		workerNum := i
-		manager.LaunchRoutine(fmt.Sprint("worker", workerNum), func(ctx context.Context) error {
+		manager.GoNamed(fmt.Sprint("worker", workerNum), func(ctx context.Context) error {
 			// We'll use a timer to stand in for some long-running worker.
 			timer := time.NewTimer(5 * time.Second)
 			select {
@@ -127,20 +119,20 @@ func ExampleNewRoutineManager_abortOnError() {
 
 	// Lastly we'll launch a routine that returns an error, which will cancel the
 	// contexts of every op launched above.
-	manager.LaunchRoutine("faulty operation", func(ctx context.Context) error {
+	manager.GoNamed("faulty operation", func(ctx context.Context) error {
 		// This faulty operation will return an io.EOF
 		return io.EOF
 	})
 
 	// Now we join the manager, which blocks until all routines launched above return.
 	// If any operations returned an error, we will get one here.
-	err := manager.Join()
+	err := manager.Wait()
 
 	// report our error.
 	fmt.Println("\nERROR:", err)
 
 	// errors.Is() and errors.As() can inspect what caused our operations to fail.
-	// Because pears.BatchMatchFirst is our error-matching mode, only the FIRST
+	// Because pears.GroupMatchFirst is our error-matching mode, only the FIRST
 	// encountered error will pass errors.Is() or errors.As().
 	//
 	// For us that should be io.EOF.
@@ -152,7 +144,7 @@ func ExampleNewRoutineManager_abortOnError() {
 	// pass the following check since it was not the FIRST error returned. This is nice
 	// for checking against an error that started a cascade.
 	//
-	// If our match mode had been set to pears.BatchMatchAny, this check would also
+	// If our match mode had been set to pears.GroupMatchAny, this check would also
 	// pass
 	if errors.Is(err, context.Canceled) {
 		fmt.Println("error is context.Cancelled")
@@ -166,10 +158,10 @@ func ExampleNewRoutineManager_abortOnError() {
 
 	fmt.Println("batch failure caused by operation:", opErr.OpName)
 
-	// We can also extract a BatchErrors to inspect all if our errors more closely:
-	batchErr := pears.BatchErrors{}
+	// We can also extract a GroupErrors to inspect all if our errors more closely:
+	batchErr := pears.GroupErrors{}
 	if !errors.As(err, &batchErr) {
-		panic("expected BatchErrors")
+		panic("expected GroupErrors")
 	}
 
 	// Let's inspect ALL of the errors we got back. We'll see that the context

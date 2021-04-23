@@ -14,8 +14,8 @@ func TestBatchErrors_Is(t *testing.T) {
 	testCases := []struct {
 		// The name of the test case.
 		Name string
-		// The BatchErrors value to test.
-		Err pears.BatchErrors
+		// The GroupErrors value to test.
+		Err pears.GroupErrors
 		// The target error to test against.
 		Target error
 		// The expected result from errors.Is.
@@ -23,8 +23,8 @@ func TestBatchErrors_Is(t *testing.T) {
 	}{
 		{
 			Name: "None_HasMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchNone,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchNone,
 				Errs: []error{
 					io.EOF,
 				},
@@ -34,8 +34,8 @@ func TestBatchErrors_Is(t *testing.T) {
 		},
 		{
 			Name: "None_NoMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchNone,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchNone,
 				Errs: []error{
 					io.ErrClosedPipe,
 				},
@@ -45,8 +45,8 @@ func TestBatchErrors_Is(t *testing.T) {
 		},
 		{
 			Name: "Any_HasMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					io.EOF,
 				},
@@ -56,8 +56,8 @@ func TestBatchErrors_Is(t *testing.T) {
 		},
 		{
 			Name: "Any_HasMatch_1stOf2",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					io.EOF,
 					io.ErrClosedPipe,
@@ -68,8 +68,8 @@ func TestBatchErrors_Is(t *testing.T) {
 		},
 		{
 			Name: "Any_HasMatch_2ndOf2",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					io.ErrClosedPipe,
 					io.EOF,
@@ -80,8 +80,8 @@ func TestBatchErrors_Is(t *testing.T) {
 		},
 		{
 			Name: "Any_HasMatch_2ndOf3",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					io.ErrClosedPipe,
 					io.EOF,
@@ -93,8 +93,8 @@ func TestBatchErrors_Is(t *testing.T) {
 		},
 		{
 			Name: "Any_NoMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					io.ErrClosedPipe,
 					io.ErrClosedPipe,
@@ -106,8 +106,8 @@ func TestBatchErrors_Is(t *testing.T) {
 		},
 		{
 			Name: "Fist_HasMatch_First",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchFirst,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchFirst,
 				Errs: []error{
 					io.EOF,
 					io.ErrClosedPipe,
@@ -118,8 +118,8 @@ func TestBatchErrors_Is(t *testing.T) {
 		},
 		{
 			Name: "Fist_HasMatch_Second",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchFirst,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchFirst,
 				Errs: []error{
 					io.ErrClosedPipe,
 					io.EOF,
@@ -130,8 +130,8 @@ func TestBatchErrors_Is(t *testing.T) {
 		},
 		{
 			Name: "Fist_NoMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchFirst,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchFirst,
 				Errs: []error{
 					io.ErrClosedPipe,
 					io.ErrClosedPipe,
@@ -156,8 +156,8 @@ func TestBatchErrors_As(t *testing.T) {
 	testCases := []struct {
 		// The name of the test case.
 		Name string
-		// The BatchErrors value to test.
-		Err pears.BatchErrors
+		// The GroupErrors value to test.
+		Err pears.GroupErrors
 		// The target error to test against.
 		Target net.Error
 		// The expected result from errors.Is.
@@ -165,8 +165,8 @@ func TestBatchErrors_As(t *testing.T) {
 	}{
 		{
 			Name: "None_HasMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchNone,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchNone,
 				Errs: []error{
 					net.InvalidAddrError("mock error"),
 				},
@@ -176,8 +176,8 @@ func TestBatchErrors_As(t *testing.T) {
 		},
 		{
 			Name: "None_NoMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchNone,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchNone,
 				Errs: []error{
 					io.ErrClosedPipe,
 				},
@@ -187,8 +187,8 @@ func TestBatchErrors_As(t *testing.T) {
 		},
 		{
 			Name: "Any_HasMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					net.InvalidAddrError("mock error"),
 				},
@@ -198,8 +198,8 @@ func TestBatchErrors_As(t *testing.T) {
 		},
 		{
 			Name: "Any_HasMatch_1stOf2",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					net.InvalidAddrError("mock error"),
 					io.ErrClosedPipe,
@@ -210,8 +210,8 @@ func TestBatchErrors_As(t *testing.T) {
 		},
 		{
 			Name: "Any_HasMatch_2ndOf2",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					io.ErrClosedPipe,
 					net.InvalidAddrError("mock error"),
@@ -222,8 +222,8 @@ func TestBatchErrors_As(t *testing.T) {
 		},
 		{
 			Name: "Any_HasMatch_2ndOf3",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					io.ErrClosedPipe,
 					net.InvalidAddrError("mock error"),
@@ -235,8 +235,8 @@ func TestBatchErrors_As(t *testing.T) {
 		},
 		{
 			Name: "Any_NoMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					io.ErrClosedPipe,
 					io.ErrClosedPipe,
@@ -248,8 +248,8 @@ func TestBatchErrors_As(t *testing.T) {
 		},
 		{
 			Name: "Fist_HasMatch_First",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchFirst,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchFirst,
 				Errs: []error{
 					net.InvalidAddrError("mock error"),
 					io.ErrClosedPipe,
@@ -260,8 +260,8 @@ func TestBatchErrors_As(t *testing.T) {
 		},
 		{
 			Name: "Fist_HasMatch_Second",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchFirst,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchFirst,
 				Errs: []error{
 					io.ErrClosedPipe,
 					net.InvalidAddrError("mock error"),
@@ -272,8 +272,8 @@ func TestBatchErrors_As(t *testing.T) {
 		},
 		{
 			Name: "Fist_NoMatch",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchFirst,
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchFirst,
 				Errs: []error{
 					io.ErrClosedPipe,
 					io.ErrClosedPipe,
@@ -301,25 +301,25 @@ func TestBatchErrors_As(t *testing.T) {
 func TestBatchErrors_As_MatchBatchError(t *testing.T) {
 	testCases := []struct {
 		Name      string
-		MatchMode pears.BatchMatchMode
+		MatchMode pears.GroupMatchMode
 	}{
 		{
-			Name:      "BatchMatchNone",
-			MatchMode: pears.BatchMatchNone,
+			Name:      "GroupMatchNone",
+			MatchMode: pears.GroupMatchNone,
 		},
 		{
-			Name:      "BatchMatchFirst",
-			MatchMode: pears.BatchMatchFirst,
+			Name:      "GroupMatchFirst",
+			MatchMode: pears.GroupMatchFirst,
 		},
 		{
-			Name:      "BatchMatchAny",
-			MatchMode: pears.BatchMatchAny,
+			Name:      "GroupMatchAny",
+			MatchMode: pears.GroupMatchAny,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			var err error = pears.BatchErrors{
+			var err error = pears.GroupErrors{
 				MatchMode: tc.MatchMode,
 				Errs: []error{
 					io.ErrClosedPipe,
@@ -327,18 +327,18 @@ func TestBatchErrors_As_MatchBatchError(t *testing.T) {
 					io.ErrClosedPipe,
 				},
 			}
-			var batchErr pears.BatchErrors
+			var batchErr pears.GroupErrors
 
-			// Test that it works on a raw BatchErrors.
+			// Test that it works on a raw GroupErrors.
 			t.Run("raw", func(t *testing.T) {
 				assert.ErrorAs(t, err, &batchErr, "errors.As(*OpError)")
 				// We'll use the Errs field count to verify we extracted our error.
 				assert.Len(t, batchErr.Errs, 3, "batch err was extracted")
 			})
 
-			// Test that we can extract pears.BatchErrors from a wrapped error.
-			err = fmt.Errorf("wrapping BatchErrors: %w", err)
-			batchErr = pears.BatchErrors{}
+			// Test that we can extract pears.GroupErrors from a wrapped error.
+			err = fmt.Errorf("wrapping GroupErrors: %w", err)
+			batchErr = pears.GroupErrors{}
 			t.Run("wrapped", func(t *testing.T) {
 				assert.ErrorAs(t, err, &batchErr, "errors.As(*OpError)")
 				// We'll use the Errs field count to verify we extracted our error.
@@ -351,13 +351,13 @@ func TestBatchErrors_As_MatchBatchError(t *testing.T) {
 func TestBatchErrors_Error(t *testing.T) {
 	testCases := []struct {
 		Name            string
-		Err             pears.BatchErrors
+		Err             pears.GroupErrors
 		ExpectedMessage string
 	}{
 		{
-			Name: "BatchMatchNone",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchNone,
+			Name: "GroupMatchNone",
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchNone,
 				Errs: []error{
 					io.ErrUnexpectedEOF,
 					io.ErrNoProgress,
@@ -367,9 +367,9 @@ func TestBatchErrors_Error(t *testing.T) {
 			ExpectedMessage: "3 errors returned. first: unexpected EOF",
 		},
 		{
-			Name: "BatchMatchAny",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchFirst,
+			Name: "GroupMatchAny",
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchFirst,
 				Errs: []error{
 					io.ErrUnexpectedEOF,
 					io.ErrNoProgress,
@@ -379,9 +379,9 @@ func TestBatchErrors_Error(t *testing.T) {
 			ExpectedMessage: "3 errors returned. first: unexpected EOF",
 		},
 		{
-			Name: "BatchMatchAny",
-			Err: pears.BatchErrors{
-				MatchMode: pears.BatchMatchAny,
+			Name: "GroupMatchAny",
+			Err: pears.GroupErrors{
+				MatchMode: pears.GroupMatchAny,
 				Errs: []error{
 					io.ErrUnexpectedEOF,
 					io.ErrNoProgress,
@@ -400,10 +400,10 @@ func TestBatchErrors_Error(t *testing.T) {
 }
 
 func TestBatchErrors_Unwrap_Panic(t *testing.T) {
-	var err error = pears.BatchErrors{}
+	var err error = pears.GroupErrors{}
 	assert.Panics(t, func() {
 		errors.Is(err, io.EOF)
-	}, "unwrap on empty BatchErrors panics")
+	}, "unwrap on empty GroupErrors panics")
 }
 
 func TestBatchError(t *testing.T) {
