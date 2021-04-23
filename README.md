@@ -92,15 +92,15 @@ func main() {
 		// operation contexts
 
 		true, //abortOnError - this will cause any operation
-		// error to cancel all other operations
+		// error to cancel all other operations.
 
 		pears.BatchMatchFirst, // the returned BatchErrors will unwrap to the first
-		// error returned fom an operation
+		// error returned fom an operation.
 	)
 
 	for i := 0; i < 10; i++ {
 		// Each routine will be identified as 'worker [workerNum]'. We do not need to
-		// use the 'go' keyword here. op will be launched as a routine, but some internal
+		// use the 'go' keyword here. op will be launched as a routine, but some
 		// internal bookkeeping needs to occur before the op can be launched.
 		workerNum := i
 		manager.LaunchRoutine(fmt.Sprint("worker", workerNum), func(ctx context.Context) error {
@@ -158,7 +158,7 @@ func main() {
 
 	fmt.Println("batch failure caused by operation:", opErr.OpName)
 
-	// We can also extract a BatchErrors to inspect all if our errors more closely:
+	// We can also extract a BatchErrors to inspect all of our errors more closely:
 	batchErr := pears.BatchErrors{}
 	if !errors.As(err, &batchErr) {
 		panic("expected BatchErrors")
@@ -230,7 +230,7 @@ For library development guide,
 
 ### Prerequisites
 
-Golang 1.6+, Python 3.6+
+Golang 1.6+
 
 ## Authors
 
