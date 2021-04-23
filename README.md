@@ -74,6 +74,10 @@ func main() {
 
 **Gather Errors From Multiple Workers**
 
+pears offers a ``RoutineManager`` type similar to [errgroup.Group](https://pkg.go.dev/golang.org/x/sync/errgroup#section-documentation),
+with one main difference: errors are collected into a pears.BatchError type which allows
+for the collection of many errors from worker routines, not just the first worker.
+
 ```go
 package main
 
